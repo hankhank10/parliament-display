@@ -2,6 +2,10 @@
 
 A frontend-only parliament arch chart that runs locally in the browser with no backend.
 
+![Screenshot](screenshot.png)
+
+Live demo: [https://hankhank10.github.io/parliament-display/](https://hankhank10.github.io/parliament-display/)
+
 ## Run
 
 1. Open `index.html` in any modern browser.
