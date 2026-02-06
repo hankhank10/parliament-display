@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Parliament Arch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <style>
+      :root {
+        --seat-grey: #cbd5e1;
+      }
+      .seat {
+        cursor: pointer;
+        transition: fill 140ms ease-out, opacity 140ms ease-out;
+      }
+      .chart-shell {
+        min-height: 440px;
+      }
+      #tooltip {
+        transform: translate(14px, -14px);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-white p-4 md:p-8 text-slate-800">
+    <main class="max-w-6xl mx-auto grid gap-4 md:grid-cols-[1fr_360px]">
+      <section class="card bg-base-100 shadow-xl">
+        <div class="card-body chart-shell">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h1 class="text-2xl font-bold">Parliament Arch Chart</h1>
+              <p class="text-sm text-slate-500">Hover seats to isolate a party and inspect its share.</p>
+            </div>
+            <div id="summary" class="badge badge-outline badge-lg"></div>
+          </div>
+          <div class="relative mt-2 flex-1">
+            <svg id="parliament-svg" class="w-full h-full" viewBox="0 0 980 560" aria-label="Parliament seating chart"></svg>
+            <div id="tooltip" class="hidden pointer-events-none absolute z-10 bg-slate-900 text-white rounded-lg px-3 py-2 shadow-lg text-sm"></div>
+          </div>
+          <div id="legend" class="mt-2 flex flex-wrap gap-2"></div>
+        </div>
+      </section>
+
+      <section class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">Data (JSON)</h2>
+          <p class="text-sm text-slate-500">Edit party names, colors, and seats, then re-render.</p>
+          <div class="flex flex-wrap gap-2">
+            <button id="seed-arch-btn" class="btn btn-outline btn-sm" type="button">Load Arch Sample</button>
+            <button id="seed-westminster-btn" class="btn btn-outline btn-sm" type="button">Load Westminster Sample</button>
+          </div>
+          <textarea id="data-input" class="textarea textarea-bordered h-80 font-mono text-xs leading-5"></textarea>
+          <button id="render-btn" class="btn btn-primary">Render Chart</button>
+          <p id="error" class="text-error text-sm"></p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+    <script src="./sample-data.js"></script>
+  </body>
+</html>
