@@ -10,7 +10,7 @@ Live demo: [https://hankhank10.github.io/parliament-display/](https://hankhank10
 
 1. Open `index.html` in any modern browser.
 2. Edit the JSON in the right panel and click **Render Chart**.
-3. Use **Load Arch Sample** or **Load Westminster Sample** for dev/test seed data.
+3. Use the sample buttons (**Load 500 seat arch**, **Load 100 seat arch**, **Load 500 seat westminster**, **Load 100 seat westminster**) for dev/test seed data.
 
 ## JSON shape
 

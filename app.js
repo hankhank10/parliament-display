@@ -377,12 +377,43 @@ function drawArchMajorityLine(positions) {
   svg.appendChild(line);
 }
 
-function mountSeat(pos, party) {
+function computeSeatRadius(positions, type) {
+  const fallback = type === "westminster" ? 7.8 : 8.4;
+  if (positions.length < 2) {
+    return fallback;
+  }
+
+  let minDistSq = Infinity;
+  for (let i = 0; i < positions.length; i += 1) {
+    const a = positions[i];
+    for (let j = i + 1; j < positions.length; j += 1) {
+      const b = positions[j];
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      const distSq = dx * dx + dy * dy;
+      if (distSq < minDistSq) {
+        minDistSq = distSq;
+      }
+    }
+  }
+
+  if (!Number.isFinite(minDistSq) || minDistSq <= 0) {
+    return fallback;
+  }
+
+  const minDist = Math.sqrt(minDistSq);
+  if (type === "westminster") {
+    return Math.max(6.6, Math.min(13.2, minDist * 0.36));
+  }
+  return Math.max(7, Math.min(14.2, minDist * 0.38));
+}
+
+function mountSeat(pos, party, seatRadius) {
   const seat = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   seat.setAttribute("class", "seat");
   seat.setAttribute("cx", String(pos.x));
   seat.setAttribute("cy", String(pos.y));
-  seat.setAttribute("r", currentType === "westminster" ? "7.8" : "8.4");
+  seat.setAttribute("r", seatRadius.toFixed(2));
   seat.setAttribute("fill", party.color);
   seat.dataset.partyId = String(party.id);
 
@@ -411,11 +442,12 @@ function mountSeat(pos, party) {
 function renderArch(parties) {
   const totalSeats = parties.reduce((sum, p) => sum + p.seats, 0);
   const positions = orderedArchPositions(totalSeats);
+  const seatRadius = computeSeatRadius(positions, "arch");
   let seatIndex = 0;
 
   parties.forEach((party) => {
     for (let i = 0; i < party.seats; i += 1) {
-      mountSeat(positions[seatIndex], party);
+      mountSeat(positions[seatIndex], party, seatRadius);
       seatIndex += 1;
     }
   });
@@ -427,10 +459,15 @@ function renderWestminster(parties) {
   drawAisle();
   drawWestminsterHeaders();
   const byParty = westminsterSeatPositions(parties);
+  const allPositions = [];
+  byParty.forEach((seats) => {
+    allPositions.push(...seats);
+  });
+  const seatRadius = computeSeatRadius(allPositions, "westminster");
 
   parties.forEach((party) => {
     const seats = byParty.get(party.id) || [];
-    seats.forEach((pos) => mountSeat(pos, party));
+    seats.forEach((pos) => mountSeat(pos, party, seatRadius));
   });
 }
 
